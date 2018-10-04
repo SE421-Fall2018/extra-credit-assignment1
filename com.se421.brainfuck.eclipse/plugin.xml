@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   
+   <!-- defines a Brainfuck view category -->
+	<extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Brainfuck"
+            id="com.se421.brainfuck.eclipse.views.categories">
+      </category>
+   </extension>
+   
+   <!-- new project wizard -->
+   <extension point="org.eclipse.ui.newWizards">
+      <category name="Brainfuck" id="com.se421.brainfuck.eclipse.views.categories" />
+      <!--<wizard category="com.se421.brainfuck.eclipse.ui.category" class="com.se421.brainfuck.eclipse.ui.NewProjectWizard" icon="icons/brainfuck.gif" id="com.se421.brainfuck.eclipse.ui.NewProjectWizard" name="Brainfuck Project">-->
+      <!-- extending the org.birenheide.bf project, which does not have a project, but does have a category for creating new brainfuck files -->
+      <wizard category="org.birenheide.bf.Brainfuck" class="com.se421.brainfuck.eclipse.ui.NewProjectWizard" icon="icons/brainfuck.gif" id="com.se421.brainfuck.eclipse.ui.NewProjectWizard" name="Brainfuck Project">
+         <description>Creates a new Brainfuck project in the workspace.</description>
+      </wizard>
+   </extension>
+   
+   <!-- project nature icon -->
+   <extension point="org.eclipse.ui.ide.projectNatureImages">
+	<image 
+		id="com.se421.brainfuck.nature.image"
+		natureId="com.se421.brainfuck.nature"
+		icon="icons/nature.gif">
+	</image>
+   </extension>
+   
+   <!-- the following are features for a future me with too much time on my hands... -->
+   
+   <!-- project builder -->
+   <extension id="com.se421.brainfuck.builder" name="Brainfuck Project Builder" point="org.eclipse.core.resources.builders">
+      <builder hasNature="true">
+         <run class="com.se421.brainfuck.eclipse.projects.BrainfuckBuilder" />
+      </builder>
+   </extension>
+   
+   
+   <!-- project build nature -->
+   <extension id="com.se421.brainfuck.nature" name="Brainfuck Project Nature" point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="com.se421.brainfuck.eclipse.projects.BrainfuckNature" />
+      </runtime>
+      <builder id="com.se421.brainfuck.builder" />
+   </extension>
+   
+   <!-- launch Profiles -->
+   <!-- the org.birenheide.bf project has a better and fully functional runtime interface -->
+   <!--
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType id="com.se421.brainfuck.eclipse.launchConfigurationType" name="Brainfuck Application" delegate="com.se421.brainfuck.eclipse.launcher.BrainfuckLaunchDelegate" modes="run, debug" />
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage icon="icons/brainfuck.gif" configTypeID="com.se421.brainfuck.eclipse.launchConfigurationType" id="com.se421.brainfuck.eclipse.launchConfigurationTypeImage" />
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup type="com.se421.brainfuck.eclipse.launchConfigurationType" class="com.se421.brainfuck.eclipse.launcher.BrainfuckTabGroup" id="com.se421.brainfuck.eclipse.launchConfigurationTabGroup" />
+   </extension>
+   <extension point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut label="Brainfuck Application" icon="icons/Brainfuck-toolbar.gif" modes="run, debug" class="com.se421.brainfuck.eclipse.launcher.BrainfuckLaunchShortcut" description="Launch Brainfuck application" id="com.se421.brainfuck.eclipse.launcher.launchShortcut">
+         <description description="Runs the Brainfuck application" mode="run" />
+         <description description="Debugs the Brainfuck application" mode="debug" />
+         <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1" />
+                  <iterate>
+                     <or>
+                        <test property="org.eclipse.jdt.launching.hasMain" />
+                        <and>
+                           <test property="org.eclipse.jdt.launching.isContainer" />
+                           <test property="org.eclipse.jdt.launching.hasProjectNature" args="org.eclipse.jdt.core.javanature" />
+                           <test property="org.eclipse.jdt.launching.hasProjectNature" args="com.se421.brainfuck.eclipse.BrainfuckNature" />
+                        </and>
+                     </or>
+                  </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+         <configurationType id="com.se421.brainfuck.eclipse.launchConfigurationType" />
+      </shortcut>
+   </extension>
+   -->
+   
+</plugin>

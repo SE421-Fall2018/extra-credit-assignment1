@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse IDE Support for Brainfuck
+Bundle-SymbolicName: com.se421.brainfuck.eclipse;singleton:=true
+Bundle-Version: 3.3.6.qualifier
+Bundle-Activator: com.se421.brainfuck.eclipse.Activator
+Bundle-Vendor: SE421
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.core.filesystem,
+ org.eclipse.ui.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Bundle-ActivationPolicy: lazy
+Export-Package: com.se421.brainfuck.eclipse.projects
+Automatic-Module-Name: com.se421.brainfuck.eclipse
