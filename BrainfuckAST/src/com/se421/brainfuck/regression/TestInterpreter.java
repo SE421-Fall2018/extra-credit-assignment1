@@ -1,4 +1,5 @@
 package com.se421.brainfuck.regression;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.ByteArrayOutputStream;
@@ -15,7 +16,7 @@ class TestInterpreter {
 
 	@Test
 	void testHelloWorld() throws Exception {
-		File source = new File("examples" + File.separator + "hello.b");
+		File source = new File("examples" + File.separator + "hello.bf");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		BrainfuckInterpreter.execute(source, null, output);
 		String result = new String(output.toByteArray(), "UTF-8").trim();
@@ -26,7 +27,7 @@ class TestInterpreter {
 	
 	@Test
 	void testFibonacciSequence() throws Exception {
-		File source = new File("examples" + File.separator + "fib-small.b");
+		File source = new File("examples" + File.separator + "fib-small.bf");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		BrainfuckInterpreter.execute(source, null, output);
 		String result = new String(output.toByteArray(), "UTF-8").trim();
@@ -37,7 +38,7 @@ class TestInterpreter {
 	
 	@Test
 	void testQuine() throws Exception {
-		File source = new File("examples" + File.separator + "quine.b");
+		File source = new File("examples" + File.separator + "quine.bf");
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 		BrainfuckInterpreter.execute(source, null, output);
 		String result = new String(output.toByteArray(), Charset.forName("UTF-8")).trim();
