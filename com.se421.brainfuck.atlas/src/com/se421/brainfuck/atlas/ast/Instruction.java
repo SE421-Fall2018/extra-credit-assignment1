@@ -6,7 +6,7 @@ import com.ensoftcorp.atlas.core.db.graph.Edge;
 import com.ensoftcorp.atlas.core.db.graph.EditableGraph;
 import com.ensoftcorp.atlas.core.db.graph.Node;
 import com.ensoftcorp.atlas.core.index.common.SourceCorrespondence;
-import com.se421.brainfuck.atlas.common.XCSG;
+import com.se421.brainfuck.atlas.common.XCSGExtension;
 import com.se421.brainfuck.atlas.indexer.WorkspaceUtils;
 import com.se421.brainfuck.atlas.parser.support.ParserSourceCorrespondence;
 
@@ -46,15 +46,15 @@ public abstract class Instruction extends ASTNode {
 	public Node index(EditableGraph graph, Node containerNode, SubMonitor monitor) {
 		// create the instruction node
 		Node instructionNode = graph.createNode();
-		instructionNode.putAttr(XCSG.name, getType().toString());
+		instructionNode.putAttr(XCSGExtension.name, getType().toString());
 		
 		// set the instruction node's source correspondence
 		SourceCorrespondence sc = new SourceCorrespondence(WorkspaceUtils.getFile(psc.getSource()), psc.getOffset(), psc.getLength(), psc.getStartLine(), psc.getEndLine());
-		instructionNode.putAttr(XCSG.sourceCorrespondence, sc);
+		instructionNode.putAttr(XCSGExtension.sourceCorrespondence, sc);
 		
 		// make the container node contain the loop header
 		Edge containsEdge = graph.createEdge(containerNode, instructionNode);
-		containsEdge.tag(XCSG.Contains);
+		containsEdge.tag(XCSGExtension.Contains);
 		
 		return instructionNode;
 	}

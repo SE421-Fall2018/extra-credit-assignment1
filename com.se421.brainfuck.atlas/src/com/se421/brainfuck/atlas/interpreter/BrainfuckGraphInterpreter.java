@@ -14,7 +14,7 @@ import com.ensoftcorp.atlas.core.query.Q;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.ensoftcorp.atlas.core.script.CommonQueries;
 import com.se421.brainfuck.atlas.ast.Instruction;
-import com.se421.brainfuck.atlas.common.XCSG;
+import com.se421.brainfuck.atlas.common.XCSGExtension;
 
 public class BrainfuckGraphInterpreter {
 
@@ -130,7 +130,7 @@ public class BrainfuckGraphInterpreter {
 	 * @throws IOException
 	 */
 	public static void execute(Node program, InputStream input, OutputStream output, OutputStream debug) throws IOException {
-		if(program.taggedWith(XCSG.Project)) {
+		if(program.taggedWith(XCSGExtension.Project)) {
 			AtlasSet<Node> namespaces = Common.toQ(program).children().eval().nodes();
 			if(namespaces.isEmpty()) {
 				throw new IllegalArgumentException("Project does not contain any Brainfuck programs to execute.");
@@ -141,29 +141,29 @@ public class BrainfuckGraphInterpreter {
 			}
 		}
 		
-		if(program.taggedWith(XCSG.Namespace)) {
+		if(program.taggedWith(XCSGExtension.Namespace)) {
 			AtlasSet<Node> implicitFunctions = Common.toQ(program).eval().nodes();
 			if(implicitFunctions.isEmpty()) {
-				throw new IllegalArgumentException("Project namespace (" + program.getAttr(XCSG.name) + ") is missing an implicit function.");
+				throw new IllegalArgumentException("Project namespace (" + program.getAttr(XCSGExtension.name) + ") is missing an implicit function.");
 			} else if(implicitFunctions.size() > 1) {
-				throw new IllegalArgumentException("Project namespace (" + program.getAttr(XCSG.name) + ") has multiple implicit functions.");
+				throw new IllegalArgumentException("Project namespace (" + program.getAttr(XCSGExtension.name) + ") has multiple implicit functions.");
 			} else {
 				program = implicitFunctions.one();
 			}
 		}
 		
-		if(program.taggedWith(XCSG.Brainfuck.ImplictFunction)) {
+		if(program.taggedWith(XCSGExtension.Brainfuck.ImplictFunction)) {
 			AtlasSet<Node> controlFlowRoots = Common.toQ(program).eval().nodes();
 			if(controlFlowRoots.isEmpty()) {
-				throw new IllegalArgumentException("Implict function (" + program.getAttr(XCSG.name) + ") is missing a control flow roots.");
+				throw new IllegalArgumentException("Implict function (" + program.getAttr(XCSGExtension.name) + ") is missing a control flow roots.");
 			} else if(controlFlowRoots.size() > 1) {
-				throw new IllegalArgumentException("Implict function (" + program.getAttr(XCSG.name) + ") contains multiple control flow roots.");
+				throw new IllegalArgumentException("Implict function (" + program.getAttr(XCSGExtension.name) + ") contains multiple control flow roots.");
 			} else {
 				program = controlFlowRoots.one();
 			}
 		}
 		
-		if(!program.taggedWith(XCSG.ControlFlow_Node)) {
+		if(!program.taggedWith(XCSGExtension.ControlFlow_Node)) {
 			throw new IllegalArgumentException("Invalid program node. Please provide a Brainfuck project, namespace, "
 					+ "implicit function, or control flow node (root or other control flow node to being program "
 					+ "execution at a given program point)");
@@ -181,10 +181,10 @@ public class BrainfuckGraphInterpreter {
 			
 			// execute instructions until there are no more to execute
 			Q cfg = Common.toQ(CommonQueries.cfg(Common.toQ(nextInstruction).parent()).eval());
-			Q loopChildEdges = Common.toQ(cfg.retainNodes().induce(Common.universe().edges(XCSG.LoopChild)).retainEdges().eval());
+			Q loopChildEdges = Common.toQ(cfg.retainNodes().induce(Common.universe().edges(XCSGExtension.LoopChild)).retainEdges().eval());
 			do {
-				if(nextInstruction.taggedWith(XCSG.Brainfuck.Instructions)) {
-					String instructions = nextInstruction.getAttr(XCSG.name).toString();
+				if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.Instructions)) {
+					String instructions = nextInstruction.getAttr(XCSGExtension.name).toString();
 					for(int i=0; i<instructions.length(); i++) {
 						Character instruction = instructions.charAt(i);
 						if(instruction.equals(Instruction.Type.INCREMENT.getName())) {
@@ -210,18 +210,18 @@ public class BrainfuckGraphInterpreter {
 					} else {
 						nextInstruction = successors.one();
 					}
-				} else if(nextInstruction.taggedWith(XCSG.Brainfuck.Instruction)) {
-					if(nextInstruction.taggedWith(XCSG.Brainfuck.IncrementInstruction)) {
+				} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.Instruction)) {
+					if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.IncrementInstruction)) {
 						increment(memory, mp);
-					} else if(nextInstruction.taggedWith(XCSG.Brainfuck.DecrementInstruction)) {
+					} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.DecrementInstruction)) {
 						decrement(memory, mp);
-					} else if(nextInstruction.taggedWith(XCSG.Brainfuck.MoveLeftInstruction)) {
+					} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.MoveLeftInstruction)) {
 						mp = moveLeft(mp);
-					} else if(nextInstruction.taggedWith(XCSG.Brainfuck.MoveRightInstruction)) {
+					} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.MoveRightInstruction)) {
 						mp = moveRight(memory, mp);
-					} else if(nextInstruction.taggedWith(XCSG.Brainfuck.ReadInputInstruction)) {
+					} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.ReadInputInstruction)) {
 						readInput(input, memory, mp);
-					} else if(nextInstruction.taggedWith(XCSG.Brainfuck.WriteOutputInstruction)) {
+					} else if(nextInstruction.taggedWith(XCSGExtension.Brainfuck.WriteOutputInstruction)) {
 						writeOutput(output, memory, mp);
 					} else {
 						throw new IllegalArgumentException("Error: Control flow instruction [" + nextInstruction.address().toAddressString() + "] was an unknown instruction type.");
@@ -236,11 +236,11 @@ public class BrainfuckGraphInterpreter {
 				} else {
 					Q conditionalEdges = cfg.forwardStep(Common.toQ(nextInstruction));
 					if (memory.get(mp) == 0) {
-						Edge falseEdge = conditionalEdges.selectEdge(XCSG.conditionValue, false, "false").eval().edges().one();
+						Edge falseEdge = conditionalEdges.selectEdge(XCSGExtension.conditionValue, false, "false").eval().edges().one();
 						if(falseEdge != null) {
 							nextInstruction = falseEdge.to();
 						} else {
-							if (!CommonQueries.isEmpty(loopChildEdges.predecessors(Common.toQ(nextInstruction)).nodes(XCSG.ControlFlowExit))) {
+							if (!CommonQueries.isEmpty(loopChildEdges.predecessors(Common.toQ(nextInstruction)).nodes(XCSGExtension.ControlFlowExit))) {
 								// only a problem if the loop is the last statement
 								throw new IllegalArgumentException("Error: Control flow loop false edge could not be found for [" + nextInstruction.address().toAddressString() + "].");
 							} else {
@@ -248,7 +248,7 @@ public class BrainfuckGraphInterpreter {
 							}
 						}
 					} else {
-						Edge trueEdge = conditionalEdges.selectEdge(XCSG.conditionValue, true, "true").eval().edges().one();
+						Edge trueEdge = conditionalEdges.selectEdge(XCSGExtension.conditionValue, true, "true").eval().edges().one();
 						if(trueEdge != null) {
 							nextInstruction = trueEdge.to();
 						} else {

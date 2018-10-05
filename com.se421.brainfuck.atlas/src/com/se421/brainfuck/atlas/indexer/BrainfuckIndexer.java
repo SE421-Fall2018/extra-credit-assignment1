@@ -20,7 +20,7 @@ import com.ensoftcorp.atlas.core.indexing.providers.LanguageIndexingProvider;
 import com.ensoftcorp.atlas.core.indexing.providers.SimpleIndexingStage;
 import com.ensoftcorp.atlas.core.script.Common;
 import com.se421.brainfuck.atlas.ast.Program;
-import com.se421.brainfuck.atlas.common.XCSG;
+import com.se421.brainfuck.atlas.common.XCSGExtension;
 import com.se421.brainfuck.atlas.log.Log;
 import com.se421.brainfuck.atlas.parser.support.ParserSourceCorrespondence;
 import com.se421.brainfuck.eclipse.projects.BrainfuckNature;
@@ -39,30 +39,30 @@ public class BrainfuckIndexer implements com.ensoftcorp.atlas.core.indexing.prov
 			
 			// create a namespace (defined by the source file)
 			Node namespaceNode = graph.createNode();
-			namespaceNode.tag(XCSG.Namespace);
-			namespaceNode.putAttr(XCSG.name, sourceFileName);
+			namespaceNode.tag(XCSGExtension.Namespace);
+			namespaceNode.putAttr(XCSGExtension.name, sourceFileName);
 			ParserSourceCorrespondence psc = program.getParserSourceCorrespondence();
 			SourceCorrespondence namespaceSC = new SourceCorrespondence(WorkspaceUtils.getFile(psc.getSource()), psc.getOffset(), psc.getLength(), psc.getStartLine(), psc.getEndLine());
-			namespaceNode.putAttr(XCSG.sourceCorrespondence, namespaceSC);
+			namespaceNode.putAttr(XCSGExtension.sourceCorrespondence, namespaceSC);
 			
 			// make the project contain the namespace
 			Edge containsEdge = graph.createEdge(projectNode, namespaceNode);
-			containsEdge.tag(XCSG.Contains);
+			containsEdge.tag(XCSGExtension.Contains);
 			
 			// brainfuck has no real concept of functions, but will create a single implict main function
 			// as another container level inside the namespace to allow smart views and common queries to 
 			// operate cleanly out of the box
 			Node implicitFunctionNode = graph.createNode();
-			implicitFunctionNode.tag(XCSG.Brainfuck.ImplictFunction);
+			implicitFunctionNode.tag(XCSGExtension.Brainfuck.ImplictFunction);
 			if(sourceFileName.contains(".")) {
 				sourceFileName = sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
 			}
-			implicitFunctionNode.putAttr(XCSG.name, sourceFileName);
-			namespaceNode.putAttr(XCSG.sourceCorrespondence, namespaceSC);
+			implicitFunctionNode.putAttr(XCSGExtension.name, sourceFileName);
+			namespaceNode.putAttr(XCSGExtension.sourceCorrespondence, namespaceSC);
 			
 			// make the namespace contain the implicit function
 			containsEdge = graph.createEdge(namespaceNode, implicitFunctionNode);
-			containsEdge.tag(XCSG.Contains);
+			containsEdge.tag(XCSGExtension.Contains);
 			
 			// index the contents of the namespace
 			program.index(graph, implicitFunctionNode, monitor);
@@ -132,7 +132,7 @@ public class BrainfuckIndexer implements com.ensoftcorp.atlas.core.indexing.prov
 			@Override
 			public String tag() {
 				// a tag to be applied to every element created by this language indexing provider
-				return XCSG.Language.Brainfuck;
+				return XCSGExtension.Language.Brainfuck;
 			}
 
 			@Override
@@ -165,13 +165,13 @@ public class BrainfuckIndexer implements com.ensoftcorp.atlas.core.indexing.prov
 
 			@Override
 			public Node getOrCreateNodeForCompilationUnit(BrainfuckProject project, EditableGraph graph) {
-				Node compilationUnit = Common.toQ(graph).nodes(XCSG.Project).selectNode(XCSG.name, project.getProject().getName()).eval().nodes().one();
+				Node compilationUnit = Common.toQ(graph).nodes(XCSGExtension.Project).selectNode(XCSGExtension.name, project.getProject().getName()).eval().nodes().one();
 				if(compilationUnit != null){
 					return compilationUnit;
 				} else {
 					compilationUnit = graph.createNode();
-					compilationUnit.tag(XCSG.Project);
-					compilationUnit.putAttr(XCSG.name, project.getProject().getName());
+					compilationUnit.tag(XCSGExtension.Project);
+					compilationUnit.putAttr(XCSGExtension.name, project.getProject().getName());
 					return compilationUnit;
 				}
 			}

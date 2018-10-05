@@ -2,6 +2,7 @@ package com.se421.brainfuck.atlas.common;
 
 import org.eclipse.ui.IStartup;
 
+import com.ensoftcorp.atlas.core.xcsg.XCSG;
 import com.se421.brainfuck.atlas.log.Log;
 
 /**
@@ -9,7 +10,7 @@ import com.se421.brainfuck.atlas.log.Log;
  * 
  * @author Ben Holland
  */
-public class XCSG implements IStartup {
+public class XCSGExtension implements IStartup {
 
 	public static class Language {
 		public static final String Brainfuck = "XCSG.Language.Brainfuck";
@@ -64,16 +65,16 @@ public class XCSG implements IStartup {
 	public static void registerSchema(){
 		if(!isTagHierarchyInitialized){
 			isTagHierarchyInitialized = true;
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.ImplictFunction, XCSG.Function);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.Instruction, XCSG.ControlFlow_Node);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.Instructions, XCSG.ControlFlow_Node);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.IncrementInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.DecrementInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.MoveLeftInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.MoveRightInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.ReadInputInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.WriteOutputInstruction, XCSG.Brainfuck.Instruction);
-			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSG.Brainfuck.LoopFooter, XCSG.ControlFlowCondition);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.ImplictFunction, XCSG.Function);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.Instruction, XCSG.ControlFlow_Node);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.Instructions, XCSG.ControlFlow_Node);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.IncrementInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.DecrementInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.MoveLeftInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.MoveRightInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.ReadInputInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.WriteOutputInstruction, XCSGExtension.Brainfuck.Instruction);
+			com.ensoftcorp.atlas.core.xcsg.XCSG.HIERARCHY.registerTag(XCSGExtension.Brainfuck.LoopFooter, XCSG.ControlFlowCondition);
 		}
 	}
 	

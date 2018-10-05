@@ -26,7 +26,7 @@ import com.ensoftcorp.atlas.ui.selection.ISelectionContext;
 import com.ensoftcorp.atlas.ui.selection.converter.ISelectionConverter;
 import com.ensoftcorp.atlas.ui.selection.event.AbstractSelectionEvent;
 import com.ensoftcorp.atlas.ui.selection.event.IAtlasSelectionEvent;
-import com.se421.brainfuck.atlas.common.XCSG;
+import com.se421.brainfuck.atlas.common.XCSGExtension;
 import com.se421.brainfuck.atlas.indexer.BrainfuckIndexer;
 
 @SuppressWarnings("rawtypes")
@@ -143,7 +143,7 @@ public class BrainfuckSelectionConverter implements ISelectionConverter {
 			AtlasSet<Node> result = new AtlasHashSet<Node>();
 			for(IProject project : projects) {
 				String projectName = project.getName();
-				Q proj = Common.universe().nodes(XCSG.Project).selectNode(XCSG.name, projectName);
+				Q proj = Common.universe().nodes(XCSGExtension.Project).selectNode(XCSGExtension.name, projectName);
 				result.addAll(proj.eval().nodes());
 			}
 			return Common.toQ(result);
@@ -164,10 +164,10 @@ public class BrainfuckSelectionConverter implements ISelectionConverter {
 			AtlasSet<Node> result = new AtlasHashSet<Node>();
 			for(IFile file : files) {
 				String projectName = file.getProject().getName();
-				Q project = Common.universe().nodes(XCSG.Project).selectNode(XCSG.name, projectName);
-				Q namespaces = project.children().nodes(XCSG.Namespace).selectNode(XCSG.name, file.getName());
+				Q project = Common.universe().nodes(XCSGExtension.Project).selectNode(XCSGExtension.name, projectName);
+				Q namespaces = project.children().nodes(XCSGExtension.Namespace).selectNode(XCSGExtension.name, file.getName());
 				result.addAll(namespaces.eval().nodes());
-				result.addAll(namespaces.children().nodes(XCSG.Brainfuck.ImplictFunction).eval().nodes());
+				result.addAll(namespaces.children().nodes(XCSGExtension.Brainfuck.ImplictFunction).eval().nodes());
 			}
 			return Common.toQ(result);
 		}
@@ -188,11 +188,11 @@ public class BrainfuckSelectionConverter implements ISelectionConverter {
 			for(SourceSelection sourceSelection : sourceSelections) {
 				IFile file = sourceSelection.getFile();
 				String projectName = file.getProject().getName();
-				Q project = Common.universe().nodes(XCSG.Project).selectNode(XCSG.name, projectName);
-				Q namespaces = project.children().nodes(XCSG.Namespace).selectNode(XCSG.name, file.getName());
-				Q implicitFunctions = namespaces.children().nodes(XCSG.Brainfuck.ImplictFunction);
+				Q project = Common.universe().nodes(XCSGExtension.Project).selectNode(XCSGExtension.name, projectName);
+				Q namespaces = project.children().nodes(XCSGExtension.Namespace).selectNode(XCSGExtension.name, file.getName());
+				Q implicitFunctions = namespaces.children().nodes(XCSGExtension.Brainfuck.ImplictFunction);
 				Q cfgs = CommonQueries.cfg(implicitFunctions);
-				Q cfgNodes = cfgs.selectEdge(XCSG.name, sourceSelection.getSelection().getText());
+				Q cfgNodes = cfgs.selectEdge(XCSGExtension.name, sourceSelection.getSelection().getText());
 				cfgNodes = Common.toQ(cfgNodes.eval());
 				if(cfgNodes.eval().nodes().size() == 1) {
 					return cfgNodes;
@@ -206,14 +206,14 @@ public class BrainfuckSelectionConverter implements ISelectionConverter {
 					int searchOffset = sourceSelection.getSelection().getOffset();
 					for(Node cfgNode : sortedCFGNodes) {
 						// loop header SC's are kind of greedy, so we exclude them from the search unless its an exact match
-						SourceCorrespondence sc = (SourceCorrespondence) cfgNode.getAttr(XCSG.sourceCorrespondence);
+						SourceCorrespondence sc = (SourceCorrespondence) cfgNode.getAttr(XCSGExtension.sourceCorrespondence);
 						if(sc != null) {
-							if(cfgNode.taggedWith(XCSG.Loop)) {
+							if(cfgNode.taggedWith(XCSGExtension.Loop)) {
 								if(searchOffset == sc.offset) {
 									return Common.toQ(cfgNode);
 								}
 							} else {
-								if(!cfgNode.taggedWith(XCSG.Loop)) {
+								if(!cfgNode.taggedWith(XCSGExtension.Loop)) {
 									if(searchOffset <= (sc.offset + sc.length)) {
 										return Common.toQ(cfgNode);
 									}
