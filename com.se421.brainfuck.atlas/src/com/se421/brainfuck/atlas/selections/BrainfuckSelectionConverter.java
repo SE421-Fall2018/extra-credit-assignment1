@@ -208,12 +208,12 @@ public class BrainfuckSelectionConverter implements ISelectionConverter {
 						// loop header SC's are kind of greedy, so we exclude them from the search unless its an exact match
 						SourceCorrespondence sc = (SourceCorrespondence) cfgNode.getAttr(XCSGExtension.sourceCorrespondence);
 						if(sc != null) {
-							if(cfgNode.taggedWith(XCSGExtension.Loop)) {
+							if(cfgNode.taggedWith(XCSGExtension.Brainfuck.LoopHeader)) {
 								if(searchOffset == sc.offset) {
 									return Common.toQ(cfgNode);
 								}
 							} else {
-								if(!cfgNode.taggedWith(XCSGExtension.Loop)) {
+								if(!cfgNode.taggedWith(XCSGExtension.Brainfuck.LoopHeader)) {
 									if(searchOffset <= (sc.offset + sc.length)) {
 										return Common.toQ(cfgNode);
 									}

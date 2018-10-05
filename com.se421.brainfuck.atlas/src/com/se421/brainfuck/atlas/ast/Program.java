@@ -59,7 +59,7 @@ public class Program extends ASTNode {
 			if(previousInstructionNode != null) {
 				Edge controlFlowEdge = graph.createEdge(previousInstructionNode, instructionNode);
 				controlFlowEdge.tag(XCSGExtension.ControlFlow_Edge);
-				if(previousInstructionNode.taggedWith(XCSGExtension.Loop)) {
+				if(previousInstructionNode.taggedWith(XCSGExtension.Brainfuck.LoopHeader)) {
 					Node header = previousInstructionNode;
 					controlFlowEdge.putAttr(XCSGExtension.conditionValue, false); // 0 value
 					
