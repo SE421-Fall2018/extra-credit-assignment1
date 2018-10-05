@@ -4,7 +4,7 @@
   
    <!-- startup to register the XCSG tag hierarchy extensions -->
    <extension point="org.eclipse.ui.startup">
-     <startup class="com.se421.brainfuck.atlas.common.XCSG" />
+     <startup class="com.se421.brainfuck.atlas.common.XCSGExtension" />
    </extension>
   
    <!-- create an initializer extension to initialize toolbox commons preferences -->
