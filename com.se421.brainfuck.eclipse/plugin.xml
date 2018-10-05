@@ -14,9 +14,7 @@
    <!-- new project wizard -->
    <extension point="org.eclipse.ui.newWizards">
       <category name="Brainfuck" id="com.se421.brainfuck.eclipse.views.categories" />
-      <!--<wizard category="com.se421.brainfuck.eclipse.ui.category" class="com.se421.brainfuck.eclipse.ui.NewProjectWizard" icon="icons/brainfuck.gif" id="com.se421.brainfuck.eclipse.ui.NewProjectWizard" name="Brainfuck Project">-->
-      <!-- extending the org.birenheide.bf project, which does not have a project, but does have a category for creating new brainfuck files -->
-      <wizard category="org.birenheide.bf.Brainfuck" class="com.se421.brainfuck.eclipse.ui.NewProjectWizard" icon="icons/brainfuck.gif" id="com.se421.brainfuck.eclipse.ui.NewProjectWizard" name="Brainfuck Project">
+      <wizard category="com.se421.brainfuck.eclipse.ui.category" class="com.se421.brainfuck.eclipse.ui.NewProjectWizard" icon="icons/brainfuck.gif" id="com.se421.brainfuck.eclipse.ui.NewProjectWizard" name="Brainfuck Project">
          <description>Creates a new Brainfuck project in the workspace.</description>
       </wizard>
    </extension>
